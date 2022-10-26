@@ -1,3 +1,61 @@
 :root {
+    --ioniconsWidthAndHeight: 36px;
+    --siteBackgroundColor: #F3F3F3;
     
+
+    --sendingMessageHeight: 80px;
 }
+
+
+body {
+    background-color: var(--siteBackgroundColor);
+}
+
+ion-icon {
+    width: var(--ioniconsWidthAndHeight);
+    height: var(--ioniconsWidthAndHeight);
+}
+
+header {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0px 0px 7px #000000af;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #FFFFFF;
+}
+
+footer {
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 0px 7px #000000af;
+    width: 100%;
+    padding: 0px 10px;
+    height: var(--sendingMessageHeight);
+    background-color: #FFFFFF;
+
+}
+
+footer input {
+    height: 28px;
+    width: 215px;
+    border: 0px; 
+    background-color: #FFFFFF
+}
+
+.hideElement {
+    display: none;
+}
+
+
+
