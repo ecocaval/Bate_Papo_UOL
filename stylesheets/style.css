@@ -1,11 +1,18 @@
-:root {
-    --ioniconsWidthAndHeight: 36px;
-    --siteBackgroundColor: #F3F3F3;
-    
+@import url('https://fonts.googleapis.com/css2?family=Righteous&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-    --sendingMessageHeight: 80px;
+:root {
+    --siteBackgroundColor: #F3F3F3;
+    --ioniconsWidthAndHeight: 36px;
+    --messageSectionHeight: 40px;
+    --messageUserAndContentColor: #000000;
+    --messageHourColor: #AAAAAA;
+    --headerAndFooterHeight: 80px;
 }
 
+* {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
 
 body {
     background-color: var(--siteBackgroundColor);
@@ -26,8 +33,50 @@ header {
     left: 0;
     box-shadow: 0px 0px 7px #000000af;
     width: 100%;
+    height: var(--headerAndFooterHeight);
     padding: 10px 20px;
     background-color: #FFFFFF;
+}
+
+main {
+    width: 100%;
+    margin-top: calc(var(--headerAndFooterHeight) + 20px);
+    background-color: var(--siteBackgroundColor);
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 0px 0px 0px 5px;
+    height: var(--messageSectionHeight);
+}
+
+.status {
+    background-color: #DCDCDC;
+}
+
+.public {
+    background-color: #FFFFFF;
+}
+
+.messageHour {
+    color: var(--messageHourColor);
+}
+
+.messageUser {
+    color: var(--messageUserAndContentColor);
+    font-weight: 900;    
+}
+
+.messageContent {
+    color: var(--messageUserAndContentColor);
+    font-weight: 400;    
+}
+
+.message p {
+    margin: 0px 3px;
 }
 
 footer {
@@ -41,7 +90,7 @@ footer {
     box-shadow: 0px 0px 7px #000000af;
     width: 100%;
     padding: 0px 10px;
-    height: var(--sendingMessageHeight);
+    height: var(--headerAndFooterHeight);
     background-color: #FFFFFF;
 
 }
