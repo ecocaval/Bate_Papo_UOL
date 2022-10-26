@@ -1,3 +1,5 @@
+
+
 /**
  * @brief - Érico A. B. Cavalcanti - Bate Papo UOL projeto
  *          Fifth week of the full stack driven course
@@ -5,11 +7,37 @@
 
 const user = {};
 
-askUserName();
+document.querySelector('#send-request').addEventListener('click', function() {
+    let modalContent = document.querySelector('.modal .content');
+    let modalLoader = document.querySelector('.loader');
+    
+    modalLoader.classList.remove('hideElement');
+    modalContent.classList.add('hideElement');
+    
+    askUserName();
+})
+
+function Removeloader() {
+    let modalLoader = document.querySelector('.modal');
+
+    modalLoader.classList.add('hideElement');
+}
+
+function addLoader() {
+    let modalLoader = document.querySelector('.modal');
+    
+    modalLoader.classList.remove('hideElement');
+}
+
+document.querySelector('#update-request').addEventListener('click', function() {
+    addLoader()
+    
+    searchForMessages()
+})
 
 function askUserName() {
-
-    const userName = prompt('Digite o seu nome:');
+    const inputName = document.querySelector('#request-name')
+    const userName = inputName.value;
     user.name = userName;
     
     axios.post(
@@ -41,6 +69,7 @@ function startSendingStatus() {
         );
     }, 5000) //sends status to server every 5 seconds
     
+    // getParticipants();
     searchForMessages();
 }
  
@@ -49,54 +78,76 @@ function searchForMessages() {
 
     const messageSection = document.querySelector('.messageSection');
 
-    
     getMessages.then(function(response) {
-        // console.log('TEST', response.data);
-        // response.data.map(message => console.log('MESSAGE MAP', message))
-        for(let i = 0; i < response.data.length; i++) {
-            let message = response.data[i]
-            if(message.type === 'status') {
-                // console.log('MENSAGEM', message.type)
-                // from, to, text, type, time 
-                // document.querySelector('.messageSection').innerHTML += `
-                // <div class="message">
-                //     <p class="messageHour">
-                //         ${message.time}
-                //     </p>
-                //     <p class="messageUser">
-                //         ${message.from}
-                //     </p>
-                //     <p class="messageContent">
-                //         entra na sala...
-                //     </p>
-                // </div>
-                // `
-            }
 
-            if(message.type === 'message') {
-                console.log('MENSAGEM', message.type)
-                // from, to, text, type, time 
-                document.querySelector('.messageSection').innerHTML += `
-                <div class="message public">
-                    <p class="messageHour">
-                        ${message.time}
-                    </p>
-                    <p class="messageUser from">
-                        ${message.from}
-                    </p>
-                    <p>Para</p>
-                    <p class="messageUser to">
-                        ${message.to}
-                    </p>
-                    <p class="messageContent">
-                        ${message.text}
-                    </p>
-                </div>
-                `
-            }
-            
-
+    // console.log('TEST', response.data);
+    // response.data.map(message => console.log('MESSAGE MAP', message))
+    for(let i = 0; i < response.data.length; i++) {
+        let message = response.data[i]
+        if(message.type === 'status') {
+            console.log('MENSAGEM', message.type);
+            document.querySelector('.messageSection').innerHTML += `
+            <div class="message status">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser">
+                    ${message.from}
+                </p>
+                <p class="messageContent">
+                    entra na sala...
+                </p>
+            </div>
+            `;
         }
+
+        if(message.type === 'message') {
+            console.log('MENSAGEM', message.type);
+            document.querySelector('.messageSection').innerHTML += `
+            <div class="message public">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser from">
+                    ${message.from}
+                </p>
+                <p>Para</p>
+                <p class="messageUser to">
+                    ${message.to}
+                </p>
+                <p class="messageContent">
+                    ${message.text}
+                </p>
+            </div>
+            `;
+        }
+
+        if(message.type === 'private_message') {
+            console.log('MENSAGEM', message.type);
+            document.querySelector('.messageSection').innerHTML += `
+            <div class="message reserved">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser from">
+                    ${message.from}
+                </p>
+                <p>reservadamente para</p>
+                <p class="messageUser to">
+                    ${message.to}
+                </p>
+                <p class="messageContent">
+                    ${message.text}
+                </p>
+            </div>
+            `;
+        }
+    }
+    // loader false
+    Removeloader();
+
+    window.scrollTo(0, document.body.scrollHeight);
+
     });
 }
 
@@ -121,4 +172,24 @@ function sendMessage() {
             console.log('um erro aconteceu no envio da mensagem!');
         }
     );
+
+    messageBox.value = ''
+    addLoader()
+
+    setTimeout(function() {
+        searchForMessages()
+    }, 8000)
+}
+
+function getParticipants() {
+
+    const participants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
+    
+    participants.then(function(response) {
+        console.log('sucessfully got participants');
+        console.log(response);
+    }).catch(function (response) {
+        console.log('error while getting participants');
+        console.log(response);
+    })
 }
