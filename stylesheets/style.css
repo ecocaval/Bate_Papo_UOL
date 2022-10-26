@@ -16,7 +16,6 @@
 
 body {
     background-color: var(--siteBackgroundColor);
-    position: relative
 }
 
 ion-icon {
@@ -30,6 +29,7 @@ header {
     justify-content: space-between;
     align-items: center;
     position: fixed;
+    z-index: 3;
     top: 0;
     left: 0;
     box-shadow: 0px 0px 7px #000000af;
@@ -41,7 +41,13 @@ header {
 
 main {
     width: 100%;
-    margin-top: calc(var(--headerAndFooterHeight) + 20px);
+    top: var(--headerAndFooterHeight);
+    bottom: var(--headerAndFooterHeight);
+    left: 0;
+    right: 0;
+    position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background-color: var(--siteBackgroundColor);
 }
 
@@ -118,6 +124,7 @@ footer input {
 /* MODAL */
 section.modal {
     position: fixed;
+    z-index: 4;
     max-width: 100%;
     top: 0;
     bottom: 0;

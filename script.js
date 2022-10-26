@@ -100,16 +100,16 @@ function updateMessages() {
         
         let message = response.data[response.data.length - 1];
 
-        console.log(`CURRENT MESSAGE`);
-        console.log(message);
+        // console.log(`CURRENT MESSAGE`);
+        // console.log(message);
         
         if(sameMessage(lastMessage, message)) {
             console.log('mensagens iguais!');
             return;
         }
 
-        console.log(`LAST MESSAGE`);
-        console.log(message);
+        // console.log(`LAST MESSAGE`);
+        // console.log(message);
 
         lastMessage = message;
         
@@ -169,8 +169,16 @@ function updateMessages() {
             `;
         }
 
+        let lastMessageDiv = Array.from(document.querySelectorAll('.message'));
+
+        lastMessageDiv = lastMessageDiv[lastMessageDiv.length-1];
+    
+        console.log(lastMessageDiv);
+
+        lastMessageDiv.scrollIntoView();
+
         // scrolls to the last message sent
-        window.scrollTo(0, document.body.scrollHeight);
+        // window.scrollTo(0, document.body.scrollHeight);
     });    
 }
 
@@ -242,8 +250,8 @@ function searchForMessages() {
 
         if(i === response.data.length - 1) {
             lastMessage = response.data[i];
-            console.log(`LAST MESSAGE`);
-            console.log(lastMessage);
+            // console.log(`LAST MESSAGE`);
+            // console.log(lastMessage);
         }
     }
 
@@ -251,7 +259,7 @@ function searchForMessages() {
     removeLoader();
 
     // scrolls to the last message sent
-    window.scrollTo(0, document.body.scrollHeight);
+    // window.scrollTo(0, document.body.scrollHeight);
     });
 }
 
