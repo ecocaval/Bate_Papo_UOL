@@ -26,7 +26,8 @@ function askUserName() {
             console.log('erro ao enviar userName!');
             console.log(response);
             askUserName();
-        });
+        }
+    );
 }
 
 function startSendingStatus() {
@@ -42,7 +43,44 @@ function startSendingStatus() {
                 console.log('erro ao enviar status!');
                 console.log(response);
                 clearInterval(userStatus);
-            });
+            }
+        );
     }, 5000) //sends status to server every 5 seconds
+    
+    searchForMessages();
+}
+ 
+function searchForMessages() {
+    const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
+
+    getMessages.then(function(response) {
+        console.log(response);
+    });
 }
 
+function sendMessage() {
+    const message = {};
+    const messageBox = document.querySelector('footer input');
+
+    console.log('botao clicado!');
+
+    // builds the message before sending it to the API
+    message.from = user.name;
+    message.to = "Todos";
+    message.text = messageBox.value;
+    message.type = "message"; // THIS TYPE CAN BE PRIVATE IN THE BONUS FUNCTION
+
+    console.log(message);
+
+    axios.post(
+        'https://mock-api.driven.com.br/api/v6/uol/messages', 
+        message)
+        .then(function (response) {
+            console.log(message);
+            console.log('mensagem enviada com sucesso!');
+        })
+        .catch(function(response) {
+            console.log('um erro aconteceu no envio da mensagem!');
+        }
+    );
+}
