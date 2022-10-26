@@ -1,5 +1,3 @@
-
-
 /**
  * @brief - Érico A. B. Cavalcanti - Bate Papo UOL projeto
  *          Fifth week of the full stack driven course
@@ -7,35 +5,36 @@
 
 const user = {};
 
+let lastMessage;
+
+// adds onclick functionality to modal name request section
 document.querySelector('#send-request').addEventListener('click', function() {
     let modalContent = document.querySelector('.modal .content');
     let modalLoader = document.querySelector('.loader');
-    
+
+    // adds hideElement do modal and displays loading screen
     modalLoader.classList.remove('hideElement');
     modalContent.classList.add('hideElement');
     
-    askUserName();
-})
+    // gets the userName written in the modal section
+    getUserName();
+}); 
 
-function Removeloader() {
+// removes screen loader
+function removeLoader() {
     let modalLoader = document.querySelector('.modal');
 
     modalLoader.classList.add('hideElement');
 }
 
+// removes screen loader
 function addLoader() {
     let modalLoader = document.querySelector('.modal');
     
     modalLoader.classList.remove('hideElement');
 }
 
-document.querySelector('#update-request').addEventListener('click', function() {
-    addLoader()
-    
-    searchForMessages()
-})
-
-function askUserName() {
+function getUserName() {
     const inputName = document.querySelector('#request-name')
     const userName = inputName.value;
     user.name = userName;
@@ -49,7 +48,7 @@ function askUserName() {
         })
         .catch(function(response) {
             console.log('erro ao enviar userName!');
-            askUserName();
+            getUserName();
         }
     );
 }
@@ -70,9 +69,112 @@ function startSendingStatus() {
     }, 5000) //sends status to server every 5 seconds
     
     // getParticipants();
+    // setInterval(searchForMessages, 6000); // updates user messages every 6 seconds   
+
     searchForMessages();
+    
+    setInterval(() => {
+        console.log('atualizando mensagens!');
+        updateMessages();        
+    }, 500);
+
 }
- 
+
+function sameMessage(lastMessage, currentMessage) {
+    if(lastMessage.from == currentMessage.from &&
+       lastMessage.to   == currentMessage.to   &&
+       lastMessage.text == currentMessage.text &&
+       lastMessage.type == currentMessage.type &&
+       lastMessage.time == currentMessage.time) {
+        return true;
+       }
+    return false;
+}
+
+function updateMessages() {
+    const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
+
+    const messageSection = document.querySelector('.messageSection');
+
+    getMessages.then(function (response) {
+        
+        let message = response.data[response.data.length - 1];
+
+        console.log(`CURRENT MESSAGE`);
+        console.log(message);
+        
+        if(sameMessage(lastMessage, message)) {
+            console.log('mensagens iguais!');
+            return;
+        }
+
+        console.log(`LAST MESSAGE`);
+        console.log(message);
+
+        lastMessage = message;
+        
+        if(message.type === 'status') {
+            messageSection.innerHTML += `
+            <div class="message status">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser">
+                    ${message.from}
+                </p>
+                <p class="messageContent">
+                    entra na sala...
+                </p>
+            </div>
+            `;
+        }
+    
+        if(message.type === 'message') {
+            messageSection.innerHTML += `
+            <div class="message public">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser from">
+                    ${message.from}
+                </p>
+                <p>Para</p>
+                <p class="messageUser to">
+                    ${message.to}
+                </p>
+                <p class="messageContent">
+                    ${message.text}
+                </p>
+            </div>
+            `;
+        }
+    
+        if(message.type === 'private_message') {
+            messageSection.innerHTML += `
+            <div class="message reserved">
+                <p class="messageHour">
+                    ${message.time}
+                </p>
+                <p class="messageUser from">
+                    ${message.from}
+                </p>
+                <p>reservadamente para</p>
+                <p class="messageUser to">
+                    ${message.to}
+                </p>
+                <p class="messageContent">
+                    ${message.text}
+                </p>
+            </div>
+            `;
+        }
+
+        // scrolls to the last message sent
+        window.scrollTo(0, document.body.scrollHeight);
+    });    
+}
+
+
 function searchForMessages() {
     const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
 
@@ -80,13 +182,10 @@ function searchForMessages() {
 
     getMessages.then(function(response) {
 
-    // console.log('TEST', response.data);
-    // response.data.map(message => console.log('MESSAGE MAP', message))
     for(let i = 0; i < response.data.length; i++) {
         let message = response.data[i]
         if(message.type === 'status') {
-            console.log('MENSAGEM', message.type);
-            document.querySelector('.messageSection').innerHTML += `
+            messageSection.innerHTML += `
             <div class="message status">
                 <p class="messageHour">
                     ${message.time}
@@ -102,8 +201,7 @@ function searchForMessages() {
         }
 
         if(message.type === 'message') {
-            console.log('MENSAGEM', message.type);
-            document.querySelector('.messageSection').innerHTML += `
+            messageSection.innerHTML += `
             <div class="message public">
                 <p class="messageHour">
                     ${message.time}
@@ -123,8 +221,7 @@ function searchForMessages() {
         }
 
         if(message.type === 'private_message') {
-            console.log('MENSAGEM', message.type);
-            document.querySelector('.messageSection').innerHTML += `
+            messageSection.innerHTML += `
             <div class="message reserved">
                 <p class="messageHour">
                     ${message.time}
@@ -142,15 +239,23 @@ function searchForMessages() {
             </div>
             `;
         }
+
+        if(i === response.data.length - 1) {
+            lastMessage = response.data[i];
+            console.log(`LAST MESSAGE`);
+            console.log(lastMessage);
+        }
     }
+
     // loader false
-    Removeloader();
+    removeLoader();
 
+    // scrolls to the last message sent
     window.scrollTo(0, document.body.scrollHeight);
-
     });
 }
 
+// sends the message inserted in the input section
 function sendMessage() {
     const message = {};
     const messageBox = document.querySelector('footer input');
@@ -165,8 +270,8 @@ function sendMessage() {
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
         message)
         .then(function (response) {
-            console.log(message);
             console.log('mensagem enviada com sucesso!');
+            
         })
         .catch(function (response) {
             console.log('um erro aconteceu no envio da mensagem!');
@@ -174,11 +279,6 @@ function sendMessage() {
     );
 
     messageBox.value = ''
-    addLoader()
-
-    setTimeout(function() {
-        searchForMessages()
-    }, 8000)
 }
 
 function getParticipants() {

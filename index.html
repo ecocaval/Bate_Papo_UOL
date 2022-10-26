@@ -11,9 +11,9 @@
 <body>
     <header>
         <img src="images/logo 1.png">
-        <button id="update-request" type="submit" class="hideElement">Atualizar</button>
         <ion-icon name="people" onclick="displayUserAside()"></ion-icon>
     </header>
+    
     <section class="modal">
         <img class="loader hideElement" src="./images/loader.png" alt="">
         <div class="content">
@@ -22,49 +22,13 @@
             <button id="send-request" type="submit">Enviar</button>
         </div>
     </section>
+
     <main>
         <section class="messageSection">
-            <!--
-            <div class="message status">
-                <p class="messageHour">
-                    (09:21:45)
-                </p>
-                <p class="messageUser">
-                    João
-                </p>
-                <p class="messageContent">
-                    entra na sala...
-                </p>
-            </div>
-            <div class="message public">
-                <p class="messageHour">
-                    (09:21:45)
-                </p>
-                <p class="messageUser from">
-                    João
-                </p>
-                <p>Para</p>
-                <p class="messageUser to">
-                    Todos:
-                </p>
-                <p class="messageContent">
-                    Bom dia
-                </p>
-            </div>
-            <div class="message reserved">
-                <p class="messageHour">
-                    (09:21:45)
-                </p>
-                <p class="messageUser">
-                    João
-                </p>
-                <p class="messageContent">
-                    Bom dia
-                </p>
-            -->
-            <!-- </div> -->
+
         </section>     
     </main>
+
     <footer>
         <input placeholder="Escreva aqui..." type="text"></input>
         <ion-icon name="paper-plane-outline" onclick="sendMessage()"></ion-icon>

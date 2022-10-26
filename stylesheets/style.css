@@ -10,7 +10,7 @@
 }
 
 * {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif !important;
     font-size: 14px;
 }
 
@@ -146,6 +146,7 @@ section.modal .content {
     animation: spinner 1s infinite linear;
 }
 
+/*loading screen rotation*/
 @keyframes spinner{
     from{
         transform: rotate(0deg);
