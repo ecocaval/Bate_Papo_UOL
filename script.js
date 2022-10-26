@@ -11,20 +11,16 @@ function askUserName() {
 
     const userName = prompt('Digite o seu nome:');
     user.name = userName;
-
-    console.log(user); 
     
     axios.post(
         'https://mock-api.driven.com.br/api/v6/uol/participants', 
         user)
         .then(function (response) {
             console.log('sucesso ao enviar userName!');
-            console.log(response);
             startSendingStatus();
         })
         .catch(function(response) {
             console.log('erro ao enviar userName!');
-            console.log(response);
             askUserName();
         }
     );
@@ -37,11 +33,9 @@ function startSendingStatus() {
             user)
             .then(function (response) {
                 console.log('sucesso ao enviar status!');
-                console.log(response);
             })
             .catch(function(response) {
-                console.log('erro ao enviar status!');
-                console.log(response);
+                console.log('erro ao enviar status, limpando intervalo!');
                 clearInterval(userStatus);
             }
         );
@@ -53,8 +47,56 @@ function startSendingStatus() {
 function searchForMessages() {
     const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
 
+    const messageSection = document.querySelector('.messageSection');
+
+    
     getMessages.then(function(response) {
-        console.log(response);
+        // console.log('TEST', response.data);
+        // response.data.map(message => console.log('MESSAGE MAP', message))
+        for(let i = 0; i < response.data.length; i++) {
+            let message = response.data[i]
+            if(message.type === 'status') {
+                // console.log('MENSAGEM', message.type)
+                // from, to, text, type, time 
+                // document.querySelector('.messageSection').innerHTML += `
+                // <div class="message">
+                //     <p class="messageHour">
+                //         ${message.time}
+                //     </p>
+                //     <p class="messageUser">
+                //         ${message.from}
+                //     </p>
+                //     <p class="messageContent">
+                //         entra na sala...
+                //     </p>
+                // </div>
+                // `
+            }
+
+            if(message.type === 'message') {
+                console.log('MENSAGEM', message.type)
+                // from, to, text, type, time 
+                document.querySelector('.messageSection').innerHTML += `
+                <div class="message public">
+                    <p class="messageHour">
+                        ${message.time}
+                    </p>
+                    <p class="messageUser from">
+                        ${message.from}
+                    </p>
+                    <p>Para</p>
+                    <p class="messageUser to">
+                        ${message.to}
+                    </p>
+                    <p class="messageContent">
+                        ${message.text}
+                    </p>
+                </div>
+                `
+            }
+            
+
+        }
     });
 }
 
@@ -62,15 +104,11 @@ function sendMessage() {
     const message = {};
     const messageBox = document.querySelector('footer input');
 
-    console.log('botao clicado!');
-
     // builds the message before sending it to the API
     message.from = user.name;
     message.to = "Todos";
     message.text = messageBox.value;
     message.type = "message"; // THIS TYPE CAN BE PRIVATE IN THE BONUS FUNCTION
-
-    console.log(message);
 
     axios.post(
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
@@ -79,7 +117,7 @@ function sendMessage() {
             console.log(message);
             console.log('mensagem enviada com sucesso!');
         })
-        .catch(function(response) {
+        .catch(function (response) {
             console.log('um erro aconteceu no envio da mensagem!');
         }
     );
