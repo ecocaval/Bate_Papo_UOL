@@ -16,15 +16,6 @@ document.querySelector('#send-request').addEventListener('click', getUserName);
 document.querySelector('header ion-icon').addEventListener('click',
 displayUserAside);
 
-// displays the green check when an option is clicked at parcitipants menu
-function displayCheck() {
-    const lockers = Array.from(document.querySelectorAll(`.${this.classList[1]}`));
-
-    lockers.forEach(item => {
-        item.childNodes[5].classList.toggle('hideElement');
-    })    
-}
-
 // displays the partcipants menu
 function displayUserAside() {
     document.querySelector('.participants-menu').classList.toggle('hideElement');
@@ -251,7 +242,7 @@ function sendMessage() {
 
     // builds the message before sending it to the API
     messageToSend.from = user.name;
-    messageToSend.to = "Todos"; // MAKE CHANGES HERE
+    messageToSend.to = checkReceiver();
     messageToSend.text = messageBox.value;
     if(messageIsPrivate()) {
         messageToSend.type = "private_message";
@@ -273,13 +264,24 @@ function sendMessage() {
     messageBox.value = '';
 }
 
+function checkReceiver() {
+    let option_selected;
+
+    const participantsList = Array.from(document.querySelectorAll('.participant'));
+
+    participantsList.forEach((participant) => {
+        if(!participant.childNodes[5].classList.contains('hideElement')) {
+            option_selected = participant;
+        }
+    })
+
+    option_selected = option_selected.childNodes[3].innerHTML;
+
+    return option_selected;
+}
+
 function messageIsPrivate() {
-    const icons = Array.from(document.querySelectorAll('ion-icon'));
-    
-    // icons[8] get the check mark of the public div option
-    if(!icons[8].classList.contains('hideElement')) {
-        return true
-    }
+    // do this function later
     return false;
 }
 
@@ -297,11 +299,19 @@ function getParticipants() {
 }
 
 function updateParticipantsList(partcipantsList) {
-    const participantsMenu = document.querySelector('.participants-menu');
+    const participantsMenu = document.querySelector('.participants-list');
+
+    participantsMenu.innerHTML += `
+        <div class="menu-option participant">
+                <ion-icon name="people"></ion-icon>
+                <p>Todos</p>
+                <ion-icon name="checkmark-sharp" class="check"></ion-icon>
+        </div>
+    `;
 
     for(let participant in partcipantsList) {
         participantsMenu.innerHTML += `
-            <div class="menu-option">
+            <div class="menu-option participant">
                 <ion-icon name="person-circle"></ion-icon>
                 <p>${partcipantsList[participant].name}</p>
                 <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
@@ -309,23 +319,19 @@ function updateParticipantsList(partcipantsList) {
         `;
     }
 
-    participantsMenu.innerHTML += `
-        <p>Escolha a visibilidade:</p>
-        <div class="menu-option lock">
-            <ion-icon name="lock-open"></ion-icon>
-            <p>Público</p>
-            <ion-icon name="checkmark-sharp" class="check"></ion-icon>
-        </div>
-
-        <div class="menu-option lock">
-            <ion-icon name="lock-closed"></ion-icon>
-            <p>Reservadamente</p>
-            <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
-        </div>
-    `;
-
     // displays the green check when an option is clicked at parcitipants menu
     document.querySelectorAll('.menu-option').forEach((option) => {
         option.addEventListener('click',displayCheck);
     });
+}
+
+// displays the green check when an option is clicked at parcitipants menu
+function displayCheck() {
+    const classList = Array.from(document.querySelectorAll(`.${this.classList[1]}`)); 
+
+    classList.forEach((participant) => {
+        participant.childNodes[5].classList.add('hideElement')
+    })  
+
+    this.childNodes[5].classList.remove('hideElement');
 }
