@@ -174,6 +174,7 @@ function searchForMessages() {
     });
 }
 
+// inserts new message depending on it's type, can be 'public', 'message' and 'private_message'
 function insertNewMessage(message) {
 
     const messageSection = document.querySelector('.messageSection');
@@ -261,25 +262,30 @@ function sendMessage() {
         }
     );   
 
+    // cleans the modal input ssection after sending the messages
     messageBox.value = '';
 }
 
+// checks who's going to receive the message sent, can be selected through participants menu
 function checkReceiver() {
     let option_selected;
 
     const participantsList = Array.from(document.querySelectorAll('.participant'));
 
+    // checks in the participants list which participant's check mark is not hidden
     participantsList.forEach((participant) => {
         if(!participant.childNodes[5].classList.contains('hideElement')) {
             option_selected = participant;
         }
     })
 
+    // gets the participant_name in the whole participant div, which includes icon, name and check mark
     option_selected = option_selected.childNodes[3].innerHTML;
 
     return option_selected;
 }
 
+// checks if message sent is private or public
 function messageIsPrivate() {
 
     const lockers = Array.from(document.querySelectorAll('.lock'));
@@ -290,6 +296,7 @@ function messageIsPrivate() {
     return false;
 }
 
+// gets the participants list from the api than updates the participants list
 function getParticipants() {
 
     const participants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
@@ -303,9 +310,12 @@ function getParticipants() {
     })
 }
 
+
+// inserts the participants list gotten from the api in the HTML
 function updateParticipantsList(partcipantsList) {
     const participantsMenu = document.querySelector('.participants-list');
 
+    // inserts the 'Todos' option
     participantsMenu.innerHTML += `
         <div class="menu-option participant">
                 <ion-icon name="people"></ion-icon>
@@ -314,6 +324,7 @@ function updateParticipantsList(partcipantsList) {
         </div>
     `;
 
+    // inserts all participants names
     for(let participant in partcipantsList) {
         participantsMenu.innerHTML += `
             <div class="menu-option participant">
@@ -334,9 +345,11 @@ function updateParticipantsList(partcipantsList) {
 function displayCheck() {
     const classList = Array.from(document.querySelectorAll(`.${this.classList[1]}`)); 
 
+    // hides all the check marks
     classList.forEach((participant) => {
         participant.childNodes[5].classList.add('hideElement')
     })  
 
+    // removes the hide class from the check mark, displaying it
     this.childNodes[5].classList.remove('hideElement');
 }
