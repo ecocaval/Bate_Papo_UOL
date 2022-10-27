@@ -91,6 +91,8 @@ header {
 .menu-option p {
     font-size: 16px;
     font-weight: 400;
+    width: 75%;
+    
 }
 
 .menu-option .check {

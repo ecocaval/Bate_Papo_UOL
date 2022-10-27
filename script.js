@@ -88,7 +88,7 @@ function startSendingStatus() {
     }, 5000) //sends status to server every 5 seconds
     
     // gets the list of the participants online in chat
-    getParticipants();   
+    updateParticipants();   
 
     // searches and displays the user messages
     searchForMessages();
@@ -301,34 +301,33 @@ function messageIsPrivate() {
 }
 
 // gets the participants list from the api than updates the participants list
-function getParticipants() {
+function updateParticipants() {
 
+    const participantsMenu = document.querySelector('.participants-list');
+
+    getParticipants(participantsMenu);
+
+    setInterval(() => {
+        getParticipants(participantsMenu);
+    }, 3000);
+
+}
+
+function getParticipants(participantsMenu) {
     const participants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
-    
+        
     participants.then(function(response) {
         console.log('sucessfully got participants');
         console.log(response.data);
-        updateParticipantsList(response.data);
+        insertParticipants(response.data, participantsMenu);
     }).catch(function (response) {
         console.error('error while getting participants');
-    })
+    })        
 }
+
 
 
 // inserts the participants list gotten from the api in the HTML
-function updateParticipantsList(partcipantsList) {
-    
-    const participantsMenu = document.querySelector('.participants-list');
-
-    insertParticipants(partcipantsList, participantsMenu);
-
-    setInterval(() => {
-        
-        insertParticipants(partcipantsList, participantsMenu);
-        
-    }, 10000);
-}
-
 function insertParticipants(partcipantsList, participantsMenu) {
 
     let userSelectedName;
