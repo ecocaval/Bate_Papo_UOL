@@ -281,7 +281,12 @@ function checkReceiver() {
 }
 
 function messageIsPrivate() {
-    // do this function later
+
+    const lockers = Array.from(document.querySelectorAll('.lock'));
+
+    if(lockers[0].childNodes[5].classList.contains('hideElement')) {
+        return true;
+    }
     return false;
 }
 
