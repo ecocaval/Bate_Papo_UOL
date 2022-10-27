@@ -8,6 +8,7 @@ const user = {};
 
 // auxiliary variable used for non-repeating messages in chat
 let lastMessage;
+let userSelected;
 
 // adds onclick functionality to modal name request section
 document.querySelector('#send-request').addEventListener('click', getUserName); 
@@ -251,6 +252,9 @@ function sendMessage() {
         messageToSend.type = "message";
     }
 
+    // setInterval(() => {
+    // }, 10);
+    
     axios.post(
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
         messageToSend)
@@ -275,9 +279,9 @@ function checkReceiver() {
     // checks in the participants list which participant's check mark is not hidden
     participantsList.forEach((participant) => {
         if(!participant.childNodes[5].classList.contains('hideElement')) {
-            option_selected = participant;
+            option_selected = participant; 
         }
-    })
+    });    
 
     // gets the participant_name in the whole participant div, which includes icon, name and check mark
     option_selected = option_selected.childNodes[3].innerHTML;
@@ -313,8 +317,29 @@ function getParticipants() {
 
 // inserts the participants list gotten from the api in the HTML
 function updateParticipantsList(partcipantsList) {
+    
     const participantsMenu = document.querySelector('.participants-list');
 
+    insertParticipants(partcipantsList, participantsMenu);
+
+    setInterval(() => {
+        
+        insertParticipants(partcipantsList, participantsMenu);
+        
+    }, 10000);
+}
+
+function insertParticipants(partcipantsList, participantsMenu) {
+
+    let userSelectedName;
+
+    if(userSelected != undefined) {
+        userSelectedName = userSelected.childNodes[3].innerHTML;
+    }
+
+    // cleans all participants
+    participantsMenu.innerHTML = '';
+    
     // inserts the 'Todos' option
     participantsMenu.innerHTML += `
         <div class="menu-option participant">
@@ -326,24 +351,43 @@ function updateParticipantsList(partcipantsList) {
 
     // inserts all participants names
     for(let participant in partcipantsList) {
+
+        let hideElement = 'hideElement';
+
+        if(userSelected != undefined) {
+            if(partcipantsList[participant].name === userSelectedName) {
+                console.log('user selecionado permaneceu na sala');
+
+                // maintains the check mark in this user when updating list
+                hideElement = null;
+
+                // removes check mark from 'todos' which is the default option
+                let todosCheckMark = participantsMenu.childNodes[1].childNodes[5];
+                todosCheckMark.classList.add('hideElement');
+            } 
+        }
+
         participantsMenu.innerHTML += `
             <div class="menu-option participant">
                 <ion-icon name="person-circle"></ion-icon>
                 <p>${partcipantsList[participant].name}</p>
-                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+                <ion-icon name="checkmark-sharp" class="check ${hideElement}"></ion-icon>
             </div>
         `;
     }
 
+
     // displays the green check when an option is clicked at parcitipants menu
     document.querySelectorAll('.menu-option').forEach((option) => {
         option.addEventListener('click',displayCheck);
-    });
+    });        
 }
 
 // displays the green check when an option is clicked at parcitipants menu
 function displayCheck() {
     const classList = Array.from(document.querySelectorAll(`.${this.classList[1]}`)); 
+
+    userSelected = this; // auxiliary global variable
 
     // hides all the check marks
     classList.forEach((participant) => {
