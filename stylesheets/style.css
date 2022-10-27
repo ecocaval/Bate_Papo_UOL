@@ -16,6 +16,7 @@
 
 body {
     background-color: var(--siteBackgroundColor);
+    height: 100vh;    
 }
 
 ion-icon {
@@ -39,6 +40,63 @@ header {
     background-color: #FFFFFF;
 }
 
+
+.transparent-back {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 6;
+    width: 100vh !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.participants-menu {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 6;
+    width: 60%;
+    height: 100vh !important;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 7px #000000af;
+    
+}
+
+.participants-menu > p {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: center;
+    margin: 15px 25px;
+}
+
+.participants-menu ion-icon {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.menu-option {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.menu-option p {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.menu-option .check {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #28BB25;
+}
+
 main {
     width: 100%;
     top: var(--headerAndFooterHeight);
@@ -55,9 +113,9 @@ main {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    width: 100%;
+    width: 97%;
     margin-bottom: 5px;
-    padding: 10px;
+    padding: 5px;
     height: auto;
 }
 
@@ -115,6 +173,10 @@ footer input {
     width: 215px;
     border: 0px; 
     background-color: #FFFFFF
+}
+
+footer ion-icon:hover {
+    cursor: pointer;
 }
 
 .hideElement {

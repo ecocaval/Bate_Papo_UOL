@@ -8,17 +8,24 @@ const user = {};
 let lastMessage;
 
 // adds onclick functionality to modal name request section
-document.querySelector('#send-request').addEventListener('click', function() {
-    let modalContent = document.querySelector('.modal .content');
-    let modalLoader = document.querySelector('.loader');
+document.querySelector('#send-request').addEventListener('click', getUserName); 
 
-    // adds hideElement do modal and displays loading screen
-    modalLoader.classList.remove('hideElement');
-    modalContent.classList.add('hideElement');
-    
-    // gets the userName written in the modal section
-    getUserName();
-}); 
+// displays participant menu
+document.querySelector('header ion-icon').addEventListener('click',
+displayUserAside);
+
+document.querySelectorAll('.menu-option').forEach((option) => {
+    option.addEventListener('click',displayCheck);
+})
+
+function displayCheck() {
+    this.childNodes[5].classList.toggle('hideElement');
+}
+
+function displayUserAside() {
+    document.querySelector('.participants-menu').classList.toggle('hideElement');
+    document.querySelector('.transparent-back').classList.toggle('hideElement');
+}
 
 // removes screen loader
 function removeLoader() {
@@ -39,45 +46,42 @@ function getUserName() {
     const userName = inputName.value;
     user.name = userName;
     
-    axios.post(
-        'https://mock-api.driven.com.br/api/v6/uol/participants', 
-        user)
+    let modalContent = document.querySelector('.modal .content');
+    let modalLoader = document.querySelector('.loader');
+
+    axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', user)
         .then(function (response) {
+        
+            // adds hideElement do modal and displays loading screen
+            modalLoader.classList.remove('hideElement');
+            modalContent.classList.add('hideElement');
+
             console.log('sucesso ao enviar userName!');
             startSendingStatus();
         })
         .catch(function(response) {
-            console.log('erro ao enviar userName!');
-            getUserName();
+            console.error('erro ao enviar userName!');
+            inputName.value = '';            
+            alert('Este nome já está em uso!')
         }
     );
 }
 
 function startSendingStatus() {
     const userStatus = setInterval(() => {
-        axios.post(
-            'https://mock-api.driven.com.br/api/v6/uol/status', 
-            user)
+        axios.post('https://mock-api.driven.com.br/api/v6/uol/status', user)
             .then(function (response) {
                 console.log('sucesso ao enviar status!');
             })
             .catch(function(response) {
-                console.log('erro ao enviar status, limpando intervalo!');
-                clearInterval(userStatus);
+                console.error('erro ao enviar status!');
             }
         );
     }, 5000) //sends status to server every 5 seconds
     
-    // getParticipants();
-    // setInterval(searchForMessages, 6000); // updates user messages every 6 seconds   
+    getParticipants();   
 
     searchForMessages();
-    
-    setInterval(() => {
-        console.log('atualizando mensagens!');
-        updateMessages();        
-    }, 500);
-
 }
 
 function sameMessage(lastMessage, currentMessage) {
@@ -169,98 +173,110 @@ function updateMessages() {
             `;
         }
 
-        let lastMessageDiv = Array.from(document.querySelectorAll('.message'));
-
-        lastMessageDiv = lastMessageDiv[lastMessageDiv.length-1];
-    
-        console.log(lastMessageDiv);
-
-        lastMessageDiv.scrollIntoView();
-
-        // scrolls to the last message sent
-        // window.scrollTo(0, document.body.scrollHeight);
+        scrollToLastMessage();
     });    
+}
+
+function scrollToLastMessage() {
+    let lastMessageDiv = Array.from(document.querySelectorAll('.message'));
+    
+    lastMessageDiv = lastMessageDiv[lastMessageDiv.length-1];  
+    
+    console.log(lastMessageDiv);
+    
+    lastMessageDiv.scrollIntoView();
 }
 
 
 function searchForMessages() {
     const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
 
-    const messageSection = document.querySelector('.messageSection');
-
     getMessages.then(function(response) {
 
     for(let i = 0; i < response.data.length; i++) {
-        let message = response.data[i]
-        if(message.type === 'status') {
-            messageSection.innerHTML += `
-            <div class="message status">
-                <p class="messageHour">
-                    ${message.time}
-                </p>
-                <p class="messageUser">
-                    ${message.from}
-                </p>
-                <p class="messageContent">
-                    entra na sala...
-                </p>
-            </div>
-            `;
-        }
+        
+        let message = response.data[i];
 
-        if(message.type === 'message') {
-            messageSection.innerHTML += `
-            <div class="message public">
-                <p class="messageHour">
-                    ${message.time}
-                </p>
-                <p class="messageUser from">
-                    ${message.from}
-                </p>
-                <p>Para</p>
-                <p class="messageUser to">
-                    ${message.to}
-                </p>
-                <p class="messageContent">
-                    ${message.text}
-                </p>
-            </div>
-            `;
-        }
-
-        if(message.type === 'private_message') {
-            messageSection.innerHTML += `
-            <div class="message reserved">
-                <p class="messageHour">
-                    ${message.time}
-                </p>
-                <p class="messageUser from">
-                    ${message.from}
-                </p>
-                <p>reservadamente para</p>
-                <p class="messageUser to">
-                    ${message.to}
-                </p>
-                <p class="messageContent">
-                    ${message.text}
-                </p>
-            </div>
-            `;
-        }
+        insertNewMessage(message);
 
         if(i === response.data.length - 1) {
             lastMessage = response.data[i];
-            // console.log(`LAST MESSAGE`);
-            // console.log(lastMessage);
         }
     }
 
     // loader false
     removeLoader();
 
-    // scrolls to the last message sent
-    // window.scrollTo(0, document.body.scrollHeight);
+    scrollToLastMessage();
+
+    // updates the last message every 200 miliseconds
+    setInterval(() => {
+        console.log('atualizando mensagens!');
+        updateMessages();        
+    }, 200);
+
     });
+}
+
+function insertNewMessage(message) {
+
+    const messageSection = document.querySelector('.messageSection');
+
+    if(message.type === 'status') {
+        messageSection.innerHTML += `
+        <div class="message status">
+            <p class="messageHour">
+                ${message.time}
+            </p>
+            <p class="messageUser">
+                ${message.from}
+            </p>
+            <p class="messageContent">
+                entra na sala...
+            </p>
+        </div>
+        `;
+    }
+
+    if(message.type === 'message') {
+        messageSection.innerHTML += `
+        <div class="message public">
+            <p class="messageHour">
+                ${message.time}
+            </p>
+            <p class="messageUser from">
+                ${message.from}
+            </p>
+            <p>Para</p>
+            <p class="messageUser to">
+                ${message.to}
+            </p>
+            <p class="messageContent">
+                ${message.text}
+            </p>
+        </div>
+        `;
+    }
+
+    if(message.type === 'private_message') {
+        messageSection.innerHTML += `
+        <div class="message reserved">
+            <p class="messageHour">
+                ${message.time}
+            </p>
+            <p class="messageUser from">
+                ${message.from}
+            </p>
+            <p>reservadamente para</p>
+            <p class="messageUser to">
+                ${message.to}
+            </p>
+            <p class="messageContent">
+                ${message.text}
+            </p>
+        </div>
+        `;
+    }
 }
 
 // sends the message inserted in the input section
@@ -278,13 +294,12 @@ function sendMessage() {
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
         message)
         .then(function (response) {
-            console.log('mensagem enviada com sucesso!');
-            
+            console.log('mensagem enviada com sucesso!');            
         })
         .catch(function (response) {
-            console.log('um erro aconteceu no envio da mensagem!');
+            console.error('um erro aconteceu no envio da mensagem!');
         }
-    );
+    );    
 
     messageBox.value = ''
 }
@@ -297,7 +312,7 @@ function getParticipants() {
         console.log('sucessfully got participants');
         console.log(response);
     }).catch(function (response) {
-        console.log('error while getting participants');
+        console.error('error while getting participants');
         console.log(response);
     })
 }

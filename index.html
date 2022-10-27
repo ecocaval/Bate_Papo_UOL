@@ -11,8 +11,42 @@
 <body>
     <header>
         <img src="images/logo 1.png">
-        <ion-icon name="people" onclick="displayUserAside()"></ion-icon>
+        <ion-icon name="people"></ion-icon>
+        
+        <div class="transparent-back hideElement " onclick="displayUserAside()"></div>
+        <section class="participants-menu hideElement">
+            <p>Escolha um contato para enviar mensagem:</p>
+            <div class="menu-option">
+                <ion-icon name="people"></ion-icon>
+                <p>Todos</p>
+                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+            </div>
+            <div class="menu-option">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>Username</p>
+                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+            </div>
+            <div class="menu-option">
+                <ion-icon name="person-circle"></ion-icon>
+                <p>Username</p>
+                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+            </div>
+
+            <p>Escolha a visibilidade:</p>
+            <div class="menu-option">
+                <ion-icon name="lock-open"></ion-icon>
+                <p>Público</p>
+                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+            </div>
+
+            <div class="menu-option">
+                <ion-icon name="lock-closed"></ion-icon>
+                <p>Reservadamente</p>
+                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+            </div>
+        </section>
     </header>
+    
     
     <section class="modal">
         <img class="loader hideElement" src="./images/loader.png" alt="">
