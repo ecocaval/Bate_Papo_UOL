@@ -191,7 +191,7 @@ function insertNewMessage(message) {
                     ${message.from}
                 </p>
                 <p class="messageContent">
-                    entra na sala...
+                    ${message.text}
                 </p>
             </div>
             `;
