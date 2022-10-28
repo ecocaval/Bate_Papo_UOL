@@ -17,6 +17,13 @@ document.querySelector('#send-request').addEventListener('click', getUserName);
 document.querySelector('header ion-icon').addEventListener('click',
 displayUserAside);
 
+// makes possible to send messages through enter key
+document.querySelector('.send-message').addEventListener('keydown', (event) => {
+    if(event.key === 'Enter') {
+        sendMessage();
+    }
+});
+
 // displays the partcipants menu
 function displayUserAside() {
     document.querySelector('.participants-menu').classList.toggle('hideElement');
