@@ -122,6 +122,7 @@ main {
     margin-bottom: 5px;
     padding: 5px;
     height: auto;
+    animation: messageTransition 0.2s linear;
 }
 
 .status {
@@ -220,8 +221,6 @@ section.modal .content {
     animation: loadingSpinner 1s infinite linear;
 }
 
-
-
 .container {
     position: fixed;
     animation: asideMenuTransition 0.3s linear;
@@ -239,9 +238,19 @@ section.modal .content {
 
 @keyframes asideMenuTransition{
     from {
-        opacity: 0;
+        opacity: 0.5;
     }
     to {
         opacity: 1;
     }
 }
+
+@keyframes messageTransition{
+    from {
+        opacity: 0.9;
+    }
+    to {
+        opacity: 1;
+    }
+}
+

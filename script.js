@@ -14,7 +14,7 @@ let userIsScrolling;
 // auxiliary variable to see if user is scrolling
 setInterval(() => {
     userIsScrolling = false;
-}, 3000);
+}, 6000);
 
 // will check if user is scrolling up and prevent it from going down to the last message
 document.body.addEventListener('wheel', userScrolled);
@@ -194,7 +194,7 @@ function searchForMessages() {
 
     setInterval(() => {
         updateMessages();        
-    }, 500);
+    }, 300);
 
     });
 }
