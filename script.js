@@ -24,6 +24,13 @@ document.querySelector('.send-message').addEventListener('keydown', (event) => {
     }
 });
 
+// makes possible to send userName through enter key
+document.querySelector('#request-name').addEventListener('keydown', (event) => {
+    if(event.key === 'Enter') {
+        getUserName();
+    }
+});
+
 // displays the partcipants menu
 function displayUserAside() {
     document.querySelector('.participants-menu').classList.toggle('hideElement');
@@ -68,7 +75,6 @@ function getUserName() {
             modalLoader.classList.remove('hideElement');
             modalContent.classList.add('hideElement');
 
-            console.log('sucesso ao enviar userName!');
             // starts sending user online status to the api
             startSendingStatus();
         })
@@ -85,9 +91,6 @@ function getUserName() {
 function startSendingStatus() {
     setInterval(() => {
         axios.post('https://mock-api.driven.com.br/api/v6/uol/status', user)
-            .then(function (response) {
-                console.log('sucesso ao enviar status!');
-            })
             .catch(function(response) {
                 console.error('erro ao enviar status!');
             }
@@ -118,8 +121,6 @@ function sameMessage(lastMessage, currentMessage) {
    from the api, .get is repeated every 200ms */
 function updateMessages() {
     const getMessages = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
-
-    const messageSection = document.querySelector('.messageSection');
 
     getMessages.then(function (response) {
         
@@ -173,11 +174,12 @@ function searchForMessages() {
 
     removeLoader();
 
+    // scrolls the screen to the last message received from the api
     scrollToLastMessage();
 
     setInterval(() => {
         updateMessages();        
-    }, 200);
+    }, 500);
 
     });
 }
@@ -203,6 +205,7 @@ function insertNewMessage(message) {
             </div>
             `;
             break;
+            
         case 'message':
             messageSection.innerHTML += `
             <div class="message public">
@@ -222,7 +225,14 @@ function insertNewMessage(message) {
             </div>
             `;
             break;
+
         case 'private_message':
+
+            // private messages won't be displayed to the wrong user
+            if(message.to !== user.name && message.from !== user.name){
+                break;
+            }
+
             messageSection.innerHTML += `
             <div class="message reserved">
                 <p class="messageHour">
@@ -258,18 +268,14 @@ function sendMessage() {
     } else {
         messageToSend.type = "message";
     }
-
-    // setInterval(() => {
-    // }, 10);
     
     axios.post(
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
         messageToSend)
-        .then(function (response) {
-            console.log('mensagem enviada com sucesso!');            
-        })
         .catch(function (response) {
-            console.error('um erro aconteceu no envio da mensagem!');
+            console.error('error while sending message!');
+            alert('You were disconnected from the chat! Reloading page...');
+            window.location.reload();
         }
     );   
 
@@ -316,7 +322,7 @@ function updateParticipants() {
 
     setInterval(() => {
         getParticipants(participantsMenu);
-    }, 3000);
+    }, 10000);
 
 }
 
@@ -324,8 +330,6 @@ function getParticipants(participantsMenu) {
     const participants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
         
     participants.then(function(response) {
-        console.log('sucessfully got participants');
-        console.log(response.data);
         insertParticipants(response.data, participantsMenu);
     }).catch(function (response) {
         console.error('error while getting participants');
@@ -362,11 +366,8 @@ function insertParticipants(partcipantsList, participantsMenu) {
 
         if(userSelected != undefined) {
             if(partcipantsList[participant].name === userSelectedName) {
-                console.log('user selecionado permaneceu na sala');
-
                 // maintains the check mark in this user when updating list
                 hideElement = null;
-
                 // removes check mark from 'todos' which is the default option
                 let todosCheckMark = participantsMenu.childNodes[1].childNodes[5];
                 todosCheckMark.classList.add('hideElement');
