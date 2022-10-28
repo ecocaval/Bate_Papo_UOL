@@ -14,7 +14,7 @@ let userIsScrolling;
 // auxiliary variable to see if user is scrolling
 setInterval(() => {
     userIsScrolling = false;
-}, 6000);
+}, 3000);
 
 // will check if user is scrolling up and prevent it from going down to the last message
 document.body.addEventListener('wheel', userScrolled);
@@ -161,7 +161,7 @@ function scrollToLastMessage() {
     lastMessageDiv = lastMessageDiv[lastMessageDiv.length-1];  
 
     // scrolls into the last element
-    lastMessageDiv.scrollIntoView();
+    lastMessageDiv.scrollIntoView({behavior: "smooth"});
 }
 
 // don't let the windows scroll down when user is scrolling up or down
@@ -182,16 +182,18 @@ function searchForMessages() {
 
         insertNewMessage(message);
 
+        // gets the last message from the first pull of the API get
         if(i === response.data.length - 1) {
             lastMessage = response.data[i];
         }
     }
 
+    // remove the loader spinner after getting messages
     removeLoader();
 
-    // scrolls the screen to the last message received from the api
     scrollToLastMessage();
 
+    // sets an update to the messages every 300 ms
     setInterval(() => {
         updateMessages();        
     }, 300);
@@ -284,6 +286,7 @@ function sendMessage() {
         messageToSend.type = "message";
     }
     
+    // sends the message and if an error occurs reloads the page
     axios.post(
         'https://mock-api.driven.com.br/api/v6/uol/messages', 
         messageToSend)
@@ -319,6 +322,8 @@ function checkReceiver() {
 
 // checks if message sent is private or public
 function messageIsPrivate() {
+
+    // lockers[0] --> 'Público' | lockers[1] --> 'Reservadamente'  
 
     const lockers = Array.from(document.querySelectorAll('.lock'));
 
