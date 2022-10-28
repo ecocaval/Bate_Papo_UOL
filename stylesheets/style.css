@@ -97,7 +97,7 @@ header {
 
 .menu-option .check {
     position: absolute;
-    top: 0;
+    top: auto;
     right: 0;
     color: #28BB25;
 }
@@ -217,15 +217,31 @@ section.modal .content {
 
 .loader {
     width: 80px;
-    animation: spinner 1s infinite linear;
+    animation: loadingSpinner 1s infinite linear;
+}
+
+
+
+.container {
+    position: fixed;
+    animation: asideMenuTransition 0.3s linear;
 }
 
 /*loading screen rotation*/
-@keyframes spinner{
+@keyframes loadingSpinner{
     from{
         transform: rotate(0deg);
     }
     to{
         transform: rotate(360deg);
+    }
+}
+
+@keyframes asideMenuTransition{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

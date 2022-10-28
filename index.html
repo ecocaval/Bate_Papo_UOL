@@ -10,31 +10,37 @@
 </head>
 <body>
     <header>
+
         <img src="images/logo 1.png">
         <ion-icon name="people"></ion-icon>
-        
-        <div class="transparent-back hideElement " onclick="displayUserAside()"></div>
-        <section class="participants-menu hideElement">
-            <p>Escolha um contato para enviar mensagem:</p>
 
-            <section class="participants-list">
-                
-            </section>
+        <div class="container hideElement">
             
+            <div class="transparent-back" onclick="displayUserAside()"></div>
+            <section class="participants-menu ">
+                <p>Escolha um contato para enviar mensagem:</p>
+    
+                <section class="participants-list">
+                    
+                </section>
+                
+    
+                <p>Escolha a visibilidade:</p>
+                <div class="menu-option lock">
+                    <ion-icon name="lock-open"></ion-icon>
+                    <p>Público</p>
+                    <ion-icon name="checkmark-sharp" class="check"></ion-icon>
+                </div>
+    
+                <div class="menu-option lock">
+                    <ion-icon name="lock-closed"></ion-icon>
+                    <p>Reservadamente</p>
+                    <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+                </div>
+            </section>
 
-            <p>Escolha a visibilidade:</p>
-            <div class="menu-option lock">
-                <ion-icon name="lock-open"></ion-icon>
-                <p>Público</p>
-                <ion-icon name="checkmark-sharp" class="check"></ion-icon>
-            </div>
+        </div>
 
-            <div class="menu-option lock">
-                <ion-icon name="lock-closed"></ion-icon>
-                <p>Reservadamente</p>
-                <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
-            </div>
-        </section>
     </header>
     
     

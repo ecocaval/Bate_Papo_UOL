@@ -9,6 +9,15 @@ const user = {};
 // auxiliary variable used for non-repeating messages in chat
 let lastMessage;
 let userSelected;
+let userIsScrolling;
+
+// auxiliary variable to see if user is scrolling
+setInterval(() => {
+    userIsScrolling = false;
+}, 3000);
+
+// will check if user is scrolling up and prevent it from going down to the last message
+document.body.addEventListener('wheel', userScrolled);
 
 // adds onclick functionality to modal name request section
 document.querySelector('#send-request').addEventListener('click', getUserName); 
@@ -33,8 +42,7 @@ document.querySelector('#request-name').addEventListener('keydown', (event) => {
 
 // displays the partcipants menu
 function displayUserAside() {
-    document.querySelector('.participants-menu').classList.toggle('hideElement');
-    document.querySelector('.transparent-back').classList.toggle('hideElement');
+    document.querySelector('.container').classList.toggle('hideElement')
 }
 
 // removes screen loader
@@ -138,8 +146,10 @@ function updateMessages() {
         // changes the css depending on the message type
         insertNewMessage(message);
 
-        // scrolls the screen to the last message received from the api
-        scrollToLastMessage();
+        // scrolls the screen to the last message received from the ap
+        if(!userIsScrolling) {
+            scrollToLastMessage();
+        }
     });    
 }
 
@@ -152,6 +162,11 @@ function scrollToLastMessage() {
 
     // scrolls into the last element
     lastMessageDiv.scrollIntoView();
+}
+
+// don't let the windows scroll down when user is scrolling up or down
+function userScrolled(event) {
+  userIsScrolling = true;
 }
 
 // first search for messages in the api
@@ -326,6 +341,7 @@ function updateParticipants() {
 
 }
 
+// gets the participants from the api
 function getParticipants(participantsMenu) {
     const participants = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
         
@@ -335,8 +351,6 @@ function getParticipants(participantsMenu) {
         console.error('error while getting participants');
     })        
 }
-
-
 
 // inserts the participants list gotten from the api in the HTML
 function insertParticipants(partcipantsList, participantsMenu) {
@@ -392,6 +406,9 @@ function insertParticipants(partcipantsList, participantsMenu) {
 
 // displays the green check when an option is clicked at parcitipants menu
 function displayCheck() {
+
+    /* this variable is used to determine if the div selected 
+       is of users or public and reserved options */
     const classList = Array.from(document.querySelectorAll(`.${this.classList[1]}`)); 
 
     userSelected = this; // auxiliary global variable
