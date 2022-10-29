@@ -9,7 +9,7 @@ const user = {};
 // auxiliary variable used for non-repeating messages in chat
 let lastMessage;
 let userSelected;
-let userIsScrolling;
+let userIsScrolling = false;
 
 // auxiliary variable to see if user is scrolling
 setInterval(() => {
