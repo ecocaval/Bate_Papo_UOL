@@ -12,7 +12,7 @@
     <header>
 
         <img src="images/logo 1.png">
-        <ion-icon name="people"></ion-icon>
+        <ion-icon data-test="open-participants" name="people"></ion-icon>
 
         <div class="container hideElement">
             
@@ -25,16 +25,16 @@
                 </section>                
     
                 <p>Escolha a visibilidade:</p>
-                <div class="menu-option lock">
+                <div data-test="public" class="menu-option lock">
                     <ion-icon name="lock-open"></ion-icon>
                     <p>Público</p>
-                    <ion-icon name="checkmark-sharp" class="check"></ion-icon>
+                    <ion-icon data-test="check" name="checkmark-sharp" class="check"></ion-icon>
                 </div>
     
-                <div class="menu-option lock">
+                <div data-test="private" class="menu-option lock">
                     <ion-icon name="lock-closed"></ion-icon>
                     <p>Reservadamente</p>
-                    <ion-icon name="checkmark-sharp" class="check hideElement"></ion-icon>
+                    <ion-icon data-test="check" name="checkmark-sharp" class="check hideElement"></ion-icon>
                 </div>
             </section>
 
@@ -46,8 +46,8 @@
         <img class="loader hideElement" src="./images/loader.png" alt="">
         <div class="content">
             <label for="Name">Digite seu nome:</label>
-            <input id="request-name" name="Name" type="text" />
-            <button id="send-request" type="submit">Enviar</button>
+            <input data-test="input-name" id="request-name" name="Name" type="text" />
+            <button data-test="send-name" id="send-request" type="submit">Enviar</button>
         </div>
     </section>
 

@@ -209,7 +209,7 @@ function insertNewMessage(message) {
     switch (message.type) {
         case 'status':
             messageSection.innerHTML += `
-            <div class="message status">
+            <div data-test="message" class="message status">
                 <p class="messageHour">
                     ${message.time}
                 </p>
@@ -225,7 +225,7 @@ function insertNewMessage(message) {
             
         case 'message':
             messageSection.innerHTML += `
-            <div class="message public">
+            <div data-test="message" class="message public">
                 <p class="messageHour">
                     ${message.time}
                 </p>
@@ -251,7 +251,7 @@ function insertNewMessage(message) {
             }
 
             messageSection.innerHTML += `
-            <div class="message reserved">
+            <div data-test="message" class="message reserved">
                 <p class="messageHour">
                     ${message.time}
                 </p>
@@ -371,7 +371,7 @@ function insertParticipants(partcipantsList, participantsMenu) {
     
     // inserts the 'Todos' option
     participantsMenu.innerHTML += `
-        <div class="menu-option participant">
+        <div data-test="all" class="menu-option participant">
                 <ion-icon name="people"></ion-icon>
                 <p>Todos</p>
                 <ion-icon name="checkmark-sharp" class="check"></ion-icon>
@@ -394,10 +394,10 @@ function insertParticipants(partcipantsList, participantsMenu) {
         }
 
         participantsMenu.innerHTML += `
-            <div class="menu-option participant">
+            <div data-test="participant" class="menu-option participant">
                 <ion-icon name="person-circle"></ion-icon>
                 <p>${partcipantsList[participant].name}</p>
-                <ion-icon name="checkmark-sharp" class="check ${hideElement}"></ion-icon>
+                <ion-icon data-test="check" name="checkmark-sharp" class="check ${hideElement}"></ion-icon>
             </div>
         `;
     }
